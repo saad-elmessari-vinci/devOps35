@@ -42,9 +42,7 @@ router.post('/login', (req, res, next) => {
         }
     }
     else {
-        console.log("bad user");
-        req.session.errors = "Utilisateur inconnu";
-        res.redirect('/users');
+        badUser(req, res);
     }
 });
 
@@ -90,6 +88,12 @@ router.post('/add', (req, res, next) => {
 });
 
 module.exports = router;
+
+function badUser(req, res) {
+    console.log("bad user");
+    req.session.errors = "Utilisateur inconnu";
+    res.redirect('/users');
+}
 
 function isAdmin(req, res) {
     req.session.admin = true;
