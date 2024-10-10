@@ -23,17 +23,7 @@ router.post('/login', (req, res, next) => {
     const userFound = User.find(req.body.userLogin);
     console.log("User found" + JSON.stringify(userFound));
     if (userFound) {
-        if (userFound.active == false) {
-            isUserActive(req, res);
-        }
-        else {
-            if (bcrypt.compareSync(req.body.userPassword, userFound.password)) {
-                identifyUser(req, userFound, res);
-            }
-            else {
-                manageWrongPassword(req, res);
-            }
-        }
+        connectUser(userFound, req, res);
     }
     else {
         badUser(req, res);
@@ -82,6 +72,20 @@ router.post('/add', (req, res, next) => {
 });
 
 module.exports = router;
+
+function connectUser(userFound, req, res) {
+    if (userFound.active == false) {
+        isUserActive(req, res);
+    }
+    else {
+        if (bcrypt.compareSync(req.body.userPassword, userFound.password)) {
+            identifyUser(req, userFound, res);
+        }
+        else {
+            manageWrongPassword(req, res);
+        }
+    }
+}
 
 function identifyUser(req, userFound, res) {
     correctPassword(req);
